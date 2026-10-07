@@ -1,0 +1,533 @@
+<title>Cusco Mystic</title>
+<style>
+/* ============================================================
+   DESIGN PLAN
+   Layout: a sequence of full-bleed photographic panels stitched
+   by a thin gold hairline and a repeating stepped-diamond motif
+   lifted from the label's own Andean border — each section reads
+   like an engraved plate in a larger codex, not a scrolling SaaS page.
+   Single committed dark world (matches the gold-on-black label art);
+   every color is still an explicit token.
+   ============================================================ */
+:root{
+  --bg:#0b0906;
+  --bg-raised:#161009;
+  --panel:#1b140c;
+  --gold:#c9a355;
+  --gold-bright:#f0cf85;
+  --gold-dim:#8a713c;
+  --ink:#f4ead9;
+  --ink-dim:#cabfa6;
+  --line: rgba(201,163,85,0.35);
+  --line-soft: rgba(201,163,85,0.16);
+  --font-display:'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-label:'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-body:'Jost', 'Avenir Next', 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;margin:0;text-wrap:balance;}
+p{line-height:1.7;margin:0;}
+
+.eyebrow{
+  font-family:var(--font-label);
+  font-size:.72rem;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+
+.wrap{
+  max-width:1180px;
+  margin:0 auto;
+  padding-inline:clamp(20px,5vw,64px);
+}
+
+/* ---------- stepped-diamond divider, drawn from the label motif ---------- */
+.diamond-rule{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding-block:clamp(26px,4vw,40px);
+}
+.diamond-rule .line{height:1px;flex:1;background:var(--line);max-width:220px;}
+.diamond-rule svg{flex:0 0 auto;}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px clamp(20px,5vw,64px);
+  background:rgba(11,9,6,0.82);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line-soft);
+}
+.nav .mark{
+  font-family:var(--font-label);
+  letter-spacing:.22em;
+  font-size:.85rem;
+  text-transform:uppercase;
+  color:var(--gold-bright);
+}
+.nav ul{
+  list-style:none;
+  display:flex;
+  gap:clamp(14px,3vw,34px);
+  margin:0;
+  padding:0;
+  font-family:var(--font-label);
+  font-size:.66rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.nav ul a{text-decoration:none;color:var(--ink-dim);transition:color .2s;}
+.nav ul a:hover{color:var(--gold-bright);}
+.nav .mobile-hide{display:flex;}
+@media (max-width:640px){.nav .mobile-hide{display:none;}}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  min-height:min(92vh,880px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  padding-block:80px;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(8,6,4,.45) 0%, rgba(8,6,4,.6) 45%, rgba(8,6,4,.95) 100%),
+    url('images/hero-rainbowmountain.jpg');
+  background-size:cover;
+  background-position:center 70%;
+  z-index:0;
+}
+.hero-rays{position:absolute;top:-6%;left:50%;transform:translateX(-50%);width:min(900px,160%);z-index:0;opacity:.35;}
+.hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:22px;padding-inline:20px;}
+.hero-logo{width:min(300px,62vw);filter:drop-shadow(0 10px 40px rgba(0,0,0,.6));}
+.hero h1{
+  font-size:clamp(2.1rem,5vw,3.4rem);
+  color:var(--ink);
+  max-width:14ch;
+}
+.hero .sub{
+  font-family:var(--font-label);
+  font-size:clamp(.72rem,1.6vw,.85rem);
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--gold-bright);
+}
+.hero .tag{
+  max-width:46ch;
+  color:var(--ink-dim);
+  font-size:1.05rem;
+}
+.hero .cta-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+
+.btn{
+  font-family:var(--font-label);
+  font-size:.7rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  padding:14px 28px;
+  border-radius:2px;
+  text-decoration:none;
+  display:inline-block;
+  cursor:pointer;
+  border:1px solid var(--gold);
+  background:transparent;
+  color:var(--gold-bright);
+  transition:background .2s,color .2s;
+}
+.btn.solid{background:var(--gold);color:#201707;}
+.btn:hover{background:var(--gold);color:#201707;}
+.btn.solid:hover{background:var(--gold-bright);}
+
+/* ---------- section scaffolding ---------- */
+section{padding-block:clamp(50px,8vw,96px);}
+.section-head{max-width:640px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(36px,6vw,64px);}
+.section-head h2{font-size:clamp(1.9rem,4vw,2.6rem);}
+.section-head p{color:var(--ink-dim);font-size:1.02rem;}
+
+/* ---------- origin / story split ---------- */
+.story{
+  display:grid;
+  grid-template-columns:1.05fr 1fr;
+  gap:clamp(28px,5vw,64px);
+  align-items:center;
+}
+@media (max-width:760px){.story{grid-template-columns:1fr;}}
+.story figure{margin:0;border:1px solid var(--line);padding:10px;background:var(--panel);}
+.story figure img{aspect-ratio:4/5;object-fit:cover;}
+.story figcaption{font-family:var(--font-label);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);padding-top:10px;text-align:center;}
+.story .copy{display:flex;flex-direction:column;gap:18px;}
+.story .copy h2{font-size:clamp(1.8rem,3.6vw,2.4rem);}
+.story .copy p{color:var(--ink-dim);font-size:1.04rem;}
+.story .copy p + p{margin-top:0;}
+
+/* ---------- products ---------- */
+.products-band{background:var(--bg-raised);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line-soft);
+  border:1px solid var(--line-soft);
+}
+@media (max-width:860px){.product-grid{grid-template-columns:1fr;}}
+.product-card{
+  background:var(--bg-raised);
+  padding:clamp(28px,4vw,40px) clamp(24px,3vw,34px);
+  display:flex;flex-direction:column;gap:16px;
+}
+.product-card .media{aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line-soft);background:#0f0b06;}
+.product-card .media img{width:100%;height:100%;object-fit:cover;}
+.product-card .media.swatch{display:flex;align-items:center;justify-content:center;background:
+  radial-gradient(circle at 30% 20%, rgba(201,163,85,.18), transparent 60%), #120d08;}
+.product-card .media.swatch svg{width:46%;}
+.product-card .kicker{font-family:var(--font-label);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.product-card h3{font-size:1.5rem;color:var(--ink);}
+.product-card p{color:var(--ink-dim);font-size:.96rem;}
+.product-card .spec{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:6px;}
+.spec span{
+  font-family:var(--font-label);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gold-dim);border:1px solid var(--line);padding:5px 10px;
+}
+
+/* ---------- land / maras ---------- */
+.full-bleed{
+  position:relative;min-height:70vh;display:flex;align-items:center;
+}
+.full-bleed::before{
+  content:"";position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+}
+.full-bleed .wrap{position:relative;z-index:1;}
+#land::before{
+  background:
+    linear-gradient(90deg, rgba(8,6,4,.88) 20%, rgba(8,6,4,.5) 58%, rgba(8,6,4,.15) 100%),
+    url('images/land-maras-wide.jpg');
+  background-size:cover;
+  background-position:center 45%;
+}
+.panel-copy{max-width:520px;display:flex;flex-direction:column;gap:18px;padding-block:70px;}
+.panel-copy h2{font-size:clamp(2rem,4vw,2.7rem);}
+.panel-copy p{color:var(--ink-dim);font-size:1.05rem;}
+
+/* ---------- people ---------- */
+#people::before{
+  background:
+    linear-gradient(270deg, rgba(8,6,4,.88) 20%, rgba(8,6,4,.5) 58%, rgba(8,6,4,.15) 100%),
+    url('images/people-textiles.jpg');
+  background-size:cover;
+  background-position:center 35%;
+}
+#people .wrap{display:flex;justify-content:flex-end;}
+#people .panel-copy{text-align:right;align-items:flex-end;}
+
+/* ---------- giving back ---------- */
+.giving{
+  background:var(--panel);
+  border-top:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
+}
+.giving .grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,40px);
+  text-align:center;
+}
+@media (max-width:760px){.giving .grid{grid-template-columns:1fr;}}
+.giving .num{font-family:var(--font-display);font-size:2.6rem;color:var(--gold-bright);font-variant-numeric:tabular-nums;}
+.giving .grid p{color:var(--ink-dim);font-size:.94rem;max-width:30ch;margin-inline:auto;}
+.giving .grid > div{display:flex;flex-direction:column;gap:10px;align-items:center;}
+
+/* ---------- note / provenance card ---------- */
+.provenance{
+  border:1px solid var(--line);
+  background:var(--bg-raised);
+  padding:clamp(24px,4vw,36px);
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+  max-width:760px;
+  margin:0 auto;
+}
+.provenance svg{flex:0 0 auto;margin-top:4px;}
+.provenance p{color:var(--ink-dim);font-size:.92rem;}
+.provenance strong{color:var(--ink);}
+
+/* ---------- list / newsletter ---------- */
+.list{
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+}
+.list form{
+  display:flex;gap:0;border:1px solid var(--gold-dim);max-width:420px;width:100%;
+}
+.list input[type=email]{
+  flex:1;min-width:0;background:transparent;border:0;padding:14px 16px;color:var(--ink);font-family:var(--font-body);font-size:.92rem;
+}
+.list input[type=email]::placeholder{color:var(--ink-dim);}
+.list input[type=email]:focus{outline:2px solid var(--gold);outline-offset:-2px;}
+.list button{
+  border:0;background:var(--gold);color:#201707;font-family:var(--font-label);
+  font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;padding:0 22px;cursor:pointer;
+}
+.list button:hover{background:var(--gold-bright);}
+.list .confirm{font-size:.86rem;color:var(--gold-bright);font-family:var(--font-label);letter-spacing:.04em;}
+.list .confirm[hidden]{display:none;}
+
+/* ---------- footer ---------- */
+footer{
+  padding:clamp(40px,6vw,64px) clamp(20px,5vw,64px) calc(32px + env(safe-area-inset-bottom,0px));
+  border-top:1px solid var(--line-soft);
+  display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center;
+}
+footer .mark{font-family:var(--font-label);letter-spacing:.22em;font-size:.78rem;text-transform:uppercase;color:var(--gold-bright);}
+footer p{color:var(--ink-dim);font-size:.82rem;max-width:52ch;}
+footer .legal{font-size:.72rem;color:var(--gold-dim);}
+
+:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;}}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<nav class="nav">
+  <div class="mark">Cusco Mystic</div>
+  <ul class="mobile-hide">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#land">The Land</a></li>
+    <li><a href="#people">The People</a></li>
+    <li><a href="#giving">Giving Back</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <svg class="hero-rays" viewBox="0 0 600 400" aria-hidden="true">
+    <g stroke="#f0cf85" stroke-width="1" opacity=".55">
+      <line x1="300" y1="120" x2="300" y2="0"/>
+      <line x1="300" y1="120" x2="140" y2="10"/>
+      <line x1="300" y1="120" x2="460" y2="10"/>
+      <line x1="300" y1="120" x2="40" y2="60"/>
+      <line x1="300" y1="120" x2="560" y2="60"/>
+      <line x1="300" y1="120" x2="210" y2="0"/>
+      <line x1="300" y1="120" x2="390" y2="0"/>
+    </g>
+    <circle cx="300" cy="120" r="30" fill="#f0cf85" opacity=".18"/>
+    <circle cx="300" cy="120" r="16" fill="#c9a355" opacity=".5"/>
+  </svg>
+  <div class="hero-inner">
+    <img class="hero-logo" src="images/logo.png" alt="Cusco Mystic emblem: a radiant sun over the peaks of the Sacred Valley">
+    <p class="sub">Sourced from the Sacred Valley of Peru</p>
+    <h1>Ancient provisions, carried down from the Andes</h1>
+    <p class="tag">Pink salt cut by hand from 3,000-year-old terraces. Spring water finished with that same mineral salt. A corn-based ferment rooted in Quechua tradition. Three products, one valley, one promise: a share of every sale returns home to fund education there.</p>
+    <div class="cta-row">
+      <a href="#products" class="btn solid">Explore the Collection</a>
+      <a href="#story" class="btn">Our Story</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="story">
+    <div class="wrap story">
+      <figure>
+        <img src="images/story-sacredvalley.jpg" alt="Aerial view of the Sacred Valley, river and terraced farmland between the mountains" style="aspect-ratio:4/5;object-fit:cover;">
+        <figcaption>The Urubamba river, Sacred Valley</figcaption>
+      </figure>
+      <div class="copy">
+        <p class="eyebrow">Why we started here</p>
+        <h2>A valley that has fed and healed for 500 generations</h2>
+        <p>The Sacred Valley of the Inca — Cusco, Peru — sits at 9,000 feet between glacier peaks, terraced farmland, and a river the Inca called the Willkamayu, the "Sacred River." Long before it was a tourist route to Machu Picchu, it was a working landscape: salt pans cut into a hillside, corn bred over centuries for altitude and flavor, and farming communities who kept their methods largely unchanged.</p>
+        <p>Cusco Mystic exists to bring three of that valley's oldest provisions to the U.S. honestly — naming where they're from, who makes them, and what we owe back to that place for letting us carry them out.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="full-bleed" style="min-height:46vh;">
+    <div style="position:absolute;inset:0;background:
+      linear-gradient(0deg, rgba(8,6,4,.9) 0%, rgba(8,6,4,.25) 35%, rgba(8,6,4,.25) 65%, rgba(8,6,4,.9) 100%),
+      url('images/intermission-humantay.jpg');
+      background-size:cover;background-position:center 60%;"></div>
+    <div class="wrap" style="position:relative;z-index:1;text-align:center;">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:clamp(1.3rem,2.6vw,1.9rem);color:var(--ink);max-width:28ch;margin-inline:auto;">"Water that falls from the glacier, salt that rises from the mountain."</p>
+      <p class="eyebrow" style="margin-top:14px;">Humantay, Sacred Valley highlands</p>
+    </div>
+  </section>
+
+  <section id="products" class="products-band">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The Collection</p>
+        <h2>Three provisions, one valley</h2>
+        <p>Each product is tied to a specific place and a specific set of hands. Here's what each one is, plainly.</p>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="product-grid">
+
+        <article class="product-card">
+          <div class="media"><img src="images/product-maras-salt.jpg" alt="Terraced salt pools of Maras, Sacred Valley"></div>
+          <p class="kicker">01 — Salt</p>
+          <h3>Maras Pink Salt</h3>
+          <p>Hand-harvested from the ancient salt terraces of Maras, where a subterranean spring has carried mineral-rich water down the hillside since pre-Inca times. Evaporated in shallow pools and raked by hand, same as it's been done for centuries. Unrefined, additive-free, naturally pink from trace minerals.</p>
+          <div class="spec"><span>Hand-harvested</span><span>Unrefined</span><span>Mineral-rich</span></div>
+        </article>
+
+        <article class="product-card">
+          <div class="media"><img src="images/products.png" alt="Cusco Mystic mineral water and Maras salt packaging"></div>
+          <p class="kicker">02 — Water</p>
+          <h3>Andean Mineral Water</h3>
+          <p>Pure Andean spring water, bottled and finished with a light top layer of Maras salt — the same trace minerals (sodium, magnesium, potassium, calcium) that give the salt its color, in water form. A crisp, naturally mineralized alternative to flat spring water.</p>
+          <div class="spec"><span>Spring-sourced</span><span>Maras-finished</span><span>Naturally mineralized</span></div>
+        </article>
+
+        <article class="product-card">
+          <div class="media"><img src="images/product-cornbucha.jpg" alt="Cusco Cornbucha bottle with Machu Picchu in the background"></div>
+          <p class="kicker">03 — Cornbucha</p>
+          <h3>Cusco Cornbucha</h3>
+          <p>A corn-based fermented beverage inspired by chicha de jora — the ceremonial corn drink of Andean communities — reimagined as a lighter, kombucha-style ferment. Purple and white Andean corn, brought from the Sacred Valley, fermented in Los Angeles. Tart, lightly effervescent, distinctly corn-forward. Launching soon.</p>
+          <div class="spec"><span>Andean corn</span><span>Small-batch ferment</span><span>Coming soon</span></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="land" class="full-bleed">
+    <div class="wrap">
+      <div class="panel-copy">
+        <p class="eyebrow">The Land — Maras, Sacred Valley</p>
+        <h2>13,000 pools, carved by hand into a single hillside</h2>
+        <p>Above the town of Maras, a saline spring has run down the mountainside since well before the Inca. Local families — the same families, generation to generation — channel that water into thousands of shallow terraced pools. The sun and wind do the rest, leaving mineral-rich salt crystals to be raked out by hand.</p>
+        <p>We buy directly from cooperative pool-owners in Maras, at prices set with them, not against them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="people" class="full-bleed">
+    <div class="wrap">
+      <div class="panel-copy">
+        <p class="eyebrow">The People — Quechua Communities</p>
+        <h2>Textiles, farming, and ceremony that pre-date the Inca empire</h2>
+        <p>The Sacred Valley is home to Quechua-speaking communities whose weaving, farming calendars, and ceremonial life — offerings to the Apus, the mountain spirits, and to Pachamama, the earth — remain central to daily life. Our corn is grown by small family plots in these communities; our salt, by the pool-owning families of Maras.</p>
+        <p>We work with local partners on the ground rather than through a single export broker, so more of what we pay reaches the people doing the work.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:28px;">
+        <p class="eyebrow">Moments from the Valley</p>
+      </div>
+      <div class="story" style="grid-template-columns:repeat(3,1fr);gap:16px;">
+        <figure style="margin:0;">
+          <img src="images/gallery-portrait.jpg" alt="A community member in traditional woven poncho and chullo hat in the Cusco highlands" style="aspect-ratio:4/5;object-fit:cover;border:1px solid var(--line);">
+          <figcaption style="font-family:var(--font-label);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding-top:8px;text-align:center;">Highland dress, hand-woven</figcaption>
+        </figure>
+        <figure style="margin:0;">
+          <img src="images/gallery-llama.jpg" alt="A llama decorated with woven tassels in the high Andes" style="aspect-ratio:4/5;object-fit:cover;border:1px solid var(--line);">
+          <figcaption style="font-family:var(--font-label);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding-top:8px;text-align:center;">Working llama, Cusco highlands</figcaption>
+        </figure>
+        <figure style="margin:0;">
+          <img src="images/gallery-street.jpg" alt="Llamas led through a cobblestone street in a Sacred Valley town" style="aspect-ratio:4/5;object-fit:cover;border:1px solid var(--line);">
+          <figcaption style="font-family:var(--font-label);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dim);padding-top:8px;text-align:center;">A Sacred Valley town</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="diamond-rule">
+    <span class="line"></span>
+    <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 1 L21 11 L11 21 L1 11 Z" fill="none" stroke="#c9a355" stroke-width="1.2"/><path d="M11 6 L16 11 L11 16 L6 11 Z" fill="#c9a355" opacity=".55"/></svg>
+    <span class="line"></span>
+  </div>
+
+  <section id="giving" class="giving">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Giving Back</p>
+        <h2>A portion of every sale goes back to the Valley</h2>
+        <p>We're building Cusco Mystic around a simple commitment: as the business grows, a share of profit is directed to education in the Sacred Valley communities we source from — school supplies, scholarships, and local teachers, decided alongside the communities themselves, not for them.</p>
+      </div>
+      <div class="grid">
+        <div>
+          <span class="num">Direct</span>
+          <p>Sourcing relationships with Maras pool-owners and Quechua farming families, not a single export intermediary</p>
+        </div>
+        <div>
+          <span class="num">Transparent</span>
+          <p>Our giving commitment and where it goes will be published here and updated as the business grows</p>
+        </div>
+        <div>
+          <span class="num">Local</span>
+          <p>Education investment decided together with the communities the ingredients come from</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="provenance">
+        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" stroke="#c9a355" stroke-width="1.2" fill="none"/><path d="M13 7v7l5 3" stroke="#c9a355" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+        <p><strong>A note on this page.</strong> This is a preview of the Cusco Mystic brand site — built to show the look, story, and product lineup before launch. Sourcing details, giving-back figures, and the Cornbucha ferment are being finalized; nothing here is a health or medical claim. Product specifics will be confirmed as agreements with Sacred Valley partners are finalized.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="list">
+    <div class="wrap list">
+      <p class="eyebrow">Stay Close to the Valley</p>
+      <h2>Be first to know when Cusco Mystic launches</h2>
+      <form id="notify-form">
+        <input id="notify-email" type="email" placeholder="you@email.com" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      <p class="confirm" id="notify-confirm" hidden>You're on the list — thank you.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="mark">Cusco Mystic</div>
+  <p>Imported from the Sacred Valley of Cusco, Peru. Salt, water, and corn, sourced directly from the families who produce them.</p>
+  <p style="font-family:var(--font-label);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);">
+    <a href="tel:+14242347755" style="text-decoration:none;">(424) 234-7755</a>
+  </p>
+  <p class="legal">Cusco Mystic — brand preview. &copy; 2026.</p>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('notify-form');
+  var confirmEl = document.getElementById('notify-confirm');
+  if(!form) return;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    form.hidden = true;
+    confirmEl.hidden = false;
+  });
+})();
+</script>
